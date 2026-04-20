@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech Project Intelligence — Athena Education</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#ffffff;--bg2:#f5f5f3;--bg3:#eeede9;
+    --text:#1a1a18;--text2:#6b6b66;--text3:#9b9b96;
+    --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);
+    --radius-md:8px;--radius-lg:12px;--radius-xl:16px;
+    --font:'DM Sans',system-ui,sans-serif;
+  }
+  @media(prefers-color-scheme:dark){
+    :root{
+      --bg:#1c1c1a;--bg2:#252523;--bg3:#2e2e2c;
+      --text:#f0efeb;--text2:#a0a09a;--text3:#6a6a65;
+      --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);
+    }
+    .badge-iot{background:#04342C!important;color:#9FE1CB!important}
+    .badge-ai{background:#26215C!important;color:#CECBF6!important}
+    .badge-robotics{background:#4A1B0C!important;color:#F5C4B3!important}
+    .badge-hardware{background:#412402!important;color:#FAC775!important}
+    .badge-env{background:#173404!important;color:#C0DD97!important}
+    .badge-biotech{background:#4B1528!important;color:#F4C0D1!important}
+    .badge-web{background:#042C53!important;color:#B5D4F4!important}
+    .stat{background:var(--bg2)!important}
+    .card{background:var(--bg)!important}
+    .snap:hover,.snap.active{background:var(--text)!important;color:var(--bg)!important}
+    .modal{background:var(--bg)!important}
+    .card-level{background:var(--bg2)!important}
+  }
+  body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;padding:24px 20px 60px}
+  a{color:inherit}
+  .shell{max-width:1100px;margin:0 auto}
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:.75rem}
+  .brand{display:flex;flex-direction:column;gap:2px}
+  .brand-name{font-size:20px;font-weight:600;color:var(--text);letter-spacing:-.02em}
+  .brand-sub{font-size:12px;color:var(--text2)}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .search-wrap{position:relative}
+  .search-wrap input{padding:7px 10px 7px 30px;width:210px;font-size:13px;font-family:var(--font);background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-md);color:var(--text);outline:none}
+  .search-wrap input:focus{border-color:var(--border2)}
+  .search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--text2);pointer-events:none}
+  select{font-size:13px;font-family:var(--font);padding:7px 10px;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-md);color:var(--text);outline:none;cursor:pointer}
+  select:focus{border-color:var(--border2)}
+  .stats-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1.5rem}
+  @media(max-width:600px){.stats-row{grid-template-columns:repeat(2,1fr)}}
+  .stat{background:var(--bg2);border-radius:var(--radius-md);padding:12px 14px}
+  .stat-num{font-size:24px;font-weight:600;color:var(--text)}
+  .stat-label{font-size:11px;color:var(--text2);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+  .tabs{display:flex;gap:0;border-bottom:0.5px solid var(--border);margin-bottom:1.1rem;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{font-size:12px;font-weight:500;color:var(--text2);padding:8px 14px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s;user-select:none}
+  .tab:hover{color:var(--text)}
+  .tab.active{color:var(--text);border-bottom-color:var(--text)}
+  .snap-row{display:flex;gap:8px;margin-bottom:1.25rem;flex-wrap:wrap}
+  .snap{font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;cursor:pointer;background:var(--bg2);color:var(--text2);border:0.5px solid var(--border);transition:all .15s;user-select:none}
+  .snap:hover,.snap.active{background:var(--text);color:var(--bg)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+  .card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:15px 16px;cursor:pointer;transition:border-color .15s;display:flex;flex-direction:column;gap:8px}
+  .card:hover{border-color:var(--border2)}
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .card-title{font-size:14px;font-weight:500;color:var(--text);line-height:1.35}
+  .badge{font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0;text-transform:uppercase;letter-spacing:.04em}
+  .badge-iot{background:#E1F5EE;color:#0F6E56}
+  .badge-ai{background:#EEEDFE;color:#3C3489}
+  .badge-robotics{background:#FAECE7;color:#993C1D}
+  .badge-web{background:#E6F1FB;color:#185FA5}
+  .badge-hardware{background:#FAEEDA;color:#854F0B}
+  .badge-env{background:#EAF3DE;color:#3B6D11}
+  .badge-biotech{background:#FBEAF0;color:#993556}
+  .card-desc{font-size:12px;color:var(--text2);line-height:1.55;flex:1}
+  .card-award{font-size:10px;color:#854F0B;font-weight:600}
+  .card-meta{display:flex;justify-content:space-between;align-items:center;margin-top:2px}
+  .card-source{font-size:11px;color:var(--text3)}
+  .card-level{font-size:10px;font-weight:500;padding:2px 7px;border-radius:12px;background:var(--bg2);color:var(--text2)}
+  .empty{text-align:center;padding:4rem 1rem;color:var(--text2);font-size:14px}
+  /* Modal */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:flex-start;justify-content:center;padding:48px 16px;overflow-y:auto}
+  .modal{background:var(--bg);border-radius:var(--radius-xl);border:0.5px solid var(--border2);padding:24px;max-width:560px;width:100%;position:relative}
+  .modal-close{position:absolute;top:16px;right:18px;cursor:pointer;font-size:20px;color:var(--text2);line-height:1;background:none;border:none;font-family:inherit}
+  .modal-badge{margin-bottom:10px}
+  .modal-title{font-size:19px;font-weight:600;margin-bottom:6px;color:var(--text);line-height:1.3}
+  .modal-award{font-size:12px;color:#854F0B;font-weight:600;margin-bottom:4px}
+  .modal-meta{font-size:12px;color:var(--text2);margin-bottom:16px}
+  .modal-section{margin-bottom:14px}
+  .modal-section h4{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text2);margin-bottom:5px}
+  .modal-section p{font-size:13px;color:var(--text);line-height:1.6}
+  .tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+  .tag{font-size:11px;padding:3px 9px;border-radius:20px;background:var(--bg2);color:var(--text2);border:0.5px solid var(--border)}
+  .source-link{font-size:12px;color:#185FA5;text-decoration:none;display:inline-block;margin-top:6px}
+  .source-link:hover{text-decoration:underline}
+  .footer{margin-top:3rem;text-align:center;font-size:11px;color:var(--text3)}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="shell">
+  <div id="app"></div>
+  <div class="footer">Athena Education · Tech Project Intelligence · Sources: Regeneron ISEF 2024–25, MIT Media Lab, MIT Manipal, Athena Scholar Projects</div>
+</div>
+
+<script>
+const PROJECTS=[
+  {id:1,title:"VoltMatrix: Analog AI Inference Chip",category:"hardware",domain:"Embedded Systems",level:"High School",source:"Regeneron ISEF 2025",institution:"Camas High School, WA",year:2025,award:"ISEF Grand Award — Embedded Systems",desc:"Novel analog computing architecture for AI inference chips enabling scalable, energy-efficient neural network processing on-device without digital conversion overhead.",components:["Custom silicon design","Analog matrix multiplication","Power gating circuits","CMOS layout tools"],impact:"10-100× energy reduction in edge AI inference vs digital chips",reference:"https://www.societyforscience.org/press-release/regeneron-isef-2025-full-awards/"},
+  {id:2,title:"Brain-Driven Forearm Exoskeleton for Stroke Rehab",category:"biotech",domain:"Neuroengineering",level:"High School",source:"Regeneron ISEF 2025",institution:"Arizona College Prep High School",year:2025,award:"ISEF Grand Award — Biomedical Engineering",desc:"EEG-controlled soft exoskeleton that uses adaptive neuroregulation feedback loops to assist subacute and chronic stroke patients in regaining forearm motor control.",components:["EEG headset","EMG sensors","Soft actuators","ESP32","CNN classifier"],impact:"Non-invasive personalised stroke rehabilitation at home",reference:"https://www.societyforscience.org/press-release/regeneron-isef-2025-full-awards/"},
+  {id:3,title:"AI-Guided Precision Agriculture Robot",category:"robotics",domain:"Agritech / Robotics",level:"High School",source:"Regeneron ISEF 2025",institution:"Langley High School, VA",year:2025,award:"ISEF Grand Award — Environmental Engineering",desc:"Autonomous robot integrating GAN-based crop disease analysis, mathematical optimisation, and AI path planning to deliver targeted methyl jasmonate pest control.",components:["ROS2","GAN crop vision model","Servo actuators","GPS module","Python solver"],impact:"Reduces pesticide use by 60%+ through targeted application",reference:"https://www.societyforscience.org/press-release/regeneron-isef-2025-full-awards/"},
+  {id:4,title:"3D-Printed Regeneratively Cooled Aerospike Nozzle",category:"hardware",domain:"Aerospace Engineering",level:"High School",source:"Regeneron ISEF 2025",institution:"Saint John's School, Houston TX",year:2025,award:"ISEF Grand Award — Engineering Technology",desc:"First student-built aerospike nozzle using FDM 3D printing with internal coolant channels for extended burn propulsion, achieving thrust vectoring without moving parts.",components:["FDM 3D printer","Inconel-infused filament","Regenerative cooling loops","Pressure sensors","Ignition electronics"],impact:"Enables lower-cost small satellite launch vehicles",reference:"https://www.societyforscience.org/press-release/regeneron-isef-2025-full-awards/"},
+  {id:5,title:"Ultrasonic Microplastics Filtration System",category:"env",domain:"Environmental Engineering",level:"High School",source:"Regeneron ISEF 2024",institution:"ISEF Finalist, USA",year:2024,award:"ISEF Grand Award — Environmental Engineering",desc:"Harnessing ultrasonic standing wave acoustics to cluster and remove microplastic particles from water flow without physical filters, enabling continuous clean water output.",components:["Piezoelectric transducers","Acoustic resonance chamber","Arduino Uno","Turbidity sensor","Flow rate controller"],impact:"Removes >95% of microplastics with zero filter replacement",reference:"https://www.societyforscience.org/press-release/regeneron-isef-2024-full-awards/"},
+  {id:6,title:"N-Type Organic Electrochemical Transistor Doping",category:"hardware",domain:"Materials Science",level:"High School",source:"Regeneron ISEF 2024",institution:"Paul Laurence Dunbar High School, KY",year:2024,award:"$75,000 Yancopoulos Innovator Award — ISEF 2024",desc:"Novel chemical doping strategy using n-type organic semiconductors to enhance electrochemical transistor performance for biosensors and neuromorphic computing.",components:["Organic semiconductor synthesis","Thin-film deposition","Electrochemical characterisation","Probe station","Custom PCB"],impact:"Enables flexible washable bioelectronic sensors",reference:"https://www.societyforscience.org/press-release/regeneron-isef-2024-full-awards/"},
+  {id:7,title:"SuiSensor: ML Suicide Risk Identification via NLP",category:"ai",domain:"Computational Linguistics / ML",level:"High School",source:"ISEF Special Award",institution:"College Park High School, TX",year:2022,award:"APA Special Award — ISEF",desc:"Machine learning system that analyses natural language from patient conversations in real time to flag suicide risk indicators and recommend treatment optimisation.",components:["BERT text classifier","Python NLP pipeline","Clinical text corpus","Scikit-learn","REST API"],impact:"Potential real-time clinical decision support for mental health providers",reference:"https://www.apa.org/ed/precollege/topss/isef-winners"},
+  {id:8,title:"Drone-enabled H₂S Gas Leak Detection",category:"iot",domain:"Industrial IoT / Safety",level:"High School",source:"Regeneron ISEF 2025",institution:"Qatar Science and Technology Secondary School",year:2025,award:"ISEF Grand Award — Embedded Systems",desc:"UAV system with electrochemical H₂S sensors and geofencing that autonomously detects hydrogen sulfide leaks in oil and gas infrastructure, alerting workers before hazardous concentrations build.",components:["DJI drone frame","Electrochemical gas sensor","GPS geofencing","LoRa radio","Raspberry Pi Zero 2W"],impact:"Prevents industrial accidents from invisible toxic gas leaks",reference:"https://www.societyforscience.org/press-release/regeneron-isef-2025-full-awards/"},
+  {id:9,title:"CityHome RoboWall — Robotic Living Unit",category:"robotics",domain:"Robotics / HCI",level:"University",source:"MIT Media Lab",institution:"MIT Media Lab",year:2014,award:"MIT Media Lab Innovation",desc:"182 sq ft voice-, touch-, and gesture-controlled robotic wall housing a bed, kitchen, and office that reconfigures on demand, making micro-apartments functionally full-size.",components:["Servo motors","Kinect depth sensor","Voice recognition","Embedded controllers","Custom furniture actuators"],impact:"Transforms how small urban spaces function",reference:"https://www.media.mit.edu/"},
+  {id:10,title:"DuoSkin — Gold Leaf Smart Tattoo Interface",category:"hardware",domain:"Wearable Computing",level:"University",source:"MIT Media Lab",institution:"MIT Media Lab × Microsoft Research",year:2016,award:"MIT Media Lab × Microsoft Research",desc:"Gold leaf skin-mounted circuit tattoos that function as NFC touchpads to control smartphones, extract biometrics, and display data via thermochromic ink.",components:["Gold leaf conductor","Thermochromic ink","NFC chip","Custom PCB","Conductive adhesive"],impact:"First on-skin user interface without rigid electronics",reference:"https://www.media.mit.edu/"},
+  {id:11,title:"MindRider — EEG Focus-State Bicycle Helmet",category:"iot",domain:"Wearable / Neurotech",level:"University",source:"MIT Media Lab",institution:"MIT Media Lab",year:2011,award:"MIT Media Lab Startup",desc:"Wearable EEG-enabled bicycle helmet that reads brainwave focus states in real time and translates them into colour-coded LED feedback to improve rider safety.",components:["EEG dry electrodes","BLE microcontroller","LED array","Signal processing DSP","3D-printed shell"],impact:"First mass-market EEG wearable safety device",reference:"https://www.media.mit.edu/"},
+  {id:12,title:"AI Social Robot for Arabic-Speaking Refugee Children",category:"ai",domain:"Social Robotics / Education",level:"University",source:"MIT Media Lab",institution:"MIT Media Lab",year:2024,award:"Jameel World Education Lab Grant 2024",desc:"AI-driven social robot platform with custom Arabic ASR/TTS to support reading, vocabulary, and social-emotional learning for refugee children in integration classrooms.",components:["Pepper robot","Custom Arabic ASR model","TTS synthesiser","Emotion recognition CV","ROS middleware"],impact:"Culturally sensitive literacy support for displaced children",reference:"https://www.media.mit.edu/"},
+  {id:13,title:"Robotic Cloud Lab for Synthetic Biology",category:"robotics",domain:"Synthetic Biology / Lab Automation",level:"University",source:"MIT Media Lab",institution:"MIT Media Lab",year:2024,award:"Jameel World Education Lab Grant 2024",desc:"Global network of programmable lab robots enabling students worldwide without wet-lab access to run real synthetic biology experiments remotely via browser interface.",components:["OT-2 liquid handling robot","Raspberry Pi server","Web experiment UI","Microfluidics","MQTT protocol"],impact:"Democratises synthetic biology education globally",reference:"https://www.media.mit.edu/"},
+  {id:14,title:"FlexSense — Soft Pneumatic Rehabilitation Glove",category:"hardware",domain:"Soft Robotics / Rehab",level:"High School",source:"Athena Scholar Project",institution:"Athena Education (student capstone)",year:2025,award:"Ivy League Admissions Capstone",desc:"Soft pneumatic glove with embedded flex sensors providing haptic resistance feedback for post-stroke hand rehabilitation, enabling personalised at-home physiotherapy.",components:["Silicone pneumatic actuators","Flex sensors","Arduino Nano","BLE module","3D-printed mould"],impact:"Affordable home rehabilitation for 80M+ stroke survivors",reference:""},
+  {id:15,title:"Hierarchical Anonymised AI — Privacy-Preserving Network Analytics",category:"ai",domain:"Cybersecurity / AI",level:"University",source:"MIT SuperCloud",institution:"MIT Lincoln Laboratory",year:2023,award:"MIT SuperCloud Student Project",desc:"Hierarchical anonymised AI system that analyses network traffic at multiple levels of the knowledge pyramid while preserving privacy through differential privacy guarantees.",components:["Differential privacy library","PyTorch","Network tap sensors","FPGA accelerator","Encrypted data pipeline"],impact:"Enables cyber threat detection without exposing user data",reference:"https://supercloud.mit.edu/student-projects/"},
+  {id:16,title:"VoltSphere — Spherical Robot with Double-Pendulum Drive",category:"robotics",domain:"Robotics / Mechanical Design",level:"High School",source:"Regeneron ISEF 2025",institution:"French International School, Hong Kong",year:2025,award:"ISEF Grand Award — Embedded Systems",desc:"Spherical robot driven by an internal double-pendulum mechanism enabling omnidirectional locomotion on any terrain without exposed wheels or tracks.",components:["3D-printed spherical shell","IMU sensor","DC gear motors","STM32 microcontroller","PID controller"],impact:"Novel locomotion for search-and-rescue in rubble",reference:"https://www.societyforscience.org/press-release/regeneron-isef-2025-full-awards/"},
+  {id:17,title:"UAV Magnetic Field Drone Detection System",category:"iot",domain:"Defence / Signal Processing",level:"High School",source:"Regeneron ISEF 2025",institution:"Korea Science Academy of KAIST",year:2025,award:"ISEF Grand Award — Embedded Systems",desc:"Passive drone detection using electromagnetic signal analysis of motor signatures to identify UAVs from magnetic field anomalies — counter-UAS application.",components:["Magnetometer array","FFT signal processor","ESP32","Custom PCB","Python ML classifier"],impact:"Low-cost passive counter-drone infrastructure",reference:"https://www.societyforscience.org/press-release/regeneron-isef-2025-full-awards/"},
+  {id:18,title:"Wearable Bio-Transistor for Lactate in Sweat",category:"biotech",domain:"Wearable Biosensors",level:"High School",source:"Regeneron ISEF 2025",institution:"T.C. Williams High School, VA",year:2025,award:"ISEF Grand Award — Biomedical Engineering",desc:"High-sensitivity field-effect bio-transistor patch that continuously monitors lactate concentration in sweat for real-time athlete and patient metabolic state tracking.",components:["Organic FET","Lactate oxidase enzyme layer","Flexible substrate","BLE transmission","Microfluidic sweat channel"],impact:"Non-invasive real-time metabolic monitoring for sports and clinical use",reference:"https://www.societyforscience.org/press-release/regeneron-isef-2025-full-awards/"},
+  {id:19,title:"MANAS — Autonomous Vehicle for Indian Traffic",category:"robotics",domain:"Autonomous Vehicles",level:"University",source:"MIT Manipal",institution:"MIT Manipal (Project MANAS)",year:2025,award:"1st Place Design Challenge — IGVC 2024",desc:"Fully autonomous ground vehicle with LiDAR, stereo vision, and custom-trained perception models designed for chaotic Indian traffic and unstructured road environments.",components:["LiDAR","Stereo camera","ROS2","NVIDIA Jetson","Custom SLAM algorithm"],impact:"3rd internationally at IGVC 2025 AutoNav Challenge",reference:"https://www.manipal.edu/mit/mit-experience/mit-videos/major-student-projects.html"},
+  {id:20,title:"Second-Order Cone Program Solver in Matrix Time",category:"ai",domain:"Algorithm Design / Maths",level:"High School",source:"Regeneron ISEF 2024",institution:"The Harker School, CA",year:2024,award:"Gordon E. Moore Award $50,000 — ISEF 2024",desc:"Novel algorithm solving second-order cone programs (SOCPs) in matrix multiplication time, a breakthrough in convex optimisation complexity theory applicable to ML and control systems.",components:["Custom algorithm design","Python prototyping","Theoretical proof framework","Numerical testing suite"],impact:"Accelerates convex optimisation solvers by orders of magnitude",reference:"https://www.societyforscience.org/press-release/regeneron-isef-2024-full-awards/"},
+  {id:21,title:"AeroMIT — SAE Aero Design UAV",category:"hardware",domain:"Aerospace / UAV Design",level:"University",source:"MIT Manipal",institution:"MIT Manipal AeroMIT",year:2025,award:"1st India & 1st Flight Demo — SAE Aero Design West 2025",desc:"Fixed-wing UAV designed to SAE Aero Design specs with CFD-optimised wing geometry, load-dropping mechanism, and autonomous stabilisation flight controller.",components:["Carbon fibre airframe","Pixhawk FC","Custom CFD wing","Servo drop mechanism","FPV telemetry"],impact:"7th overall globally at SAE Aero Design West 2025",reference:"https://www.manipal.edu/mit/mit-experience/mit-videos/major-student-projects.html"},
+  {id:22,title:"Aqua BuoyChart — IoT Water Purification Buoy",category:"iot",domain:"Environmental IoT",level:"High School",source:"Athena Scholar Project",institution:"Athena Education (student capstone)",year:2025,award:"Student Innovation Project",desc:"Floating IoT buoy integrating biochar filtration, real-time water quality sensors, and solar-powered ESP32 data logging with cloud dashboard for rural water body monitoring.",components:["ESP32","TDS/pH/turbidity sensors","Solar panel","MQTT","Biochar filter cartridge"],impact:"Low-cost distributed water quality monitoring for developing regions",reference:""},
+  {id:23,title:"Novel Aza-C-Nucleoside Synthesis Against RNA Viruses",category:"biotech",domain:"Biochemistry / Drug Discovery",level:"High School",source:"Regeneron ISEF 2025",institution:"Gymnazium Nove Zamky, Slovakia",year:2025,award:"$100,000 Yancopoulos Innovator Award — ISEF 2025",desc:"Total synthesis of novel aza-C-nucleosides from furfuryl alcohol as antiviral candidates against RNA viral diseases — a complete organic chemistry research project by a high schooler.",components:["Organic synthesis apparatus","NMR spectroscopy","HPLC purification","Antiviral activity assay","Mass spectrometry"],impact:"New class of potential antivirals against RNA pandemics",reference:"https://www.societyforscience.org/press-release/regeneron-isef-2025-grand-awards/"},
+  {id:24,title:"SpineShield — Passive Exoskeleton for Spinal Support",category:"hardware",domain:"Wearable Robotics / Ergonomics",level:"High School",source:"Athena Scholar Project",institution:"Athena Education (student capstone)",year:2025,award:"ISEF Preparation Project",desc:"Passive spring-loaded exoskeleton vest distributing compressive spinal load during heavy lifting, using compliant mechanism design to assist lumbar musculature.",components:["Carbon fibre rods","Gas spring actuators","3D-printed connectors","SolidWorks FEA","Load cells"],impact:"Reduces lumbar injury risk in manual labour by an estimated 40%",reference:""}
+];
+
+const CATS=[
+  {key:"all",label:"All projects"},
+  {key:"iot",label:"IoT"},
+  {key:"ai",label:"AI / ML"},
+  {key:"robotics",label:"Robotics"},
+  {key:"hardware",label:"Hardware & Materials"},
+  {key:"env",label:"Environmental"},
+  {key:"biotech",label:"Biotech"},
+  {key:"web",label:"Software & Web"}
+];
+const SOURCES=["All sources","MIT Lab / Media Lab","Regeneron ISEF 2025","Regeneron ISEF 2024","Athena Scholar","MIT Manipal","ISEF Special Award"];
+const LEVELS=["All levels","High School","University"];
+
+let state={cat:"all",source:"All sources",level:"All levels",q:"",modal:null};
+
+function badgeClass(c){return"badge badge-"+c}
+function levelLabel(l){return l==="High School"?"High School":"University"}
+
+function matchProject(p){
+  const q=state.q.toLowerCase();
+  if(state.cat!=="all"&&p.category!==state.cat)return false;
+  if(state.level!=="All levels"&&p.level!==state.level)return false;
+  if(state.source!=="All sources"){
+    if(state.source==="MIT Lab / Media Lab"&&!p.source.includes("MIT"))return false;
+    if(state.source==="Regeneron ISEF 2025"&&p.source!=="Regeneron ISEF 2025")return false;
+    if(state.source==="Regeneron ISEF 2024"&&p.source!=="Regeneron ISEF 2024")return false;
+    if(state.source==="Athena Scholar"&&!p.source.includes("Athena"))return false;
+    if(state.source==="MIT Manipal"&&!p.source.includes("Manipal"))return false;
+    if(state.source==="ISEF Special Award"&&!p.source.includes("ISEF Special"))return false;
+  }
+  if(q&&!(p.title.toLowerCase().includes(q)||p.desc.toLowerCase().includes(q)||p.domain.toLowerCase().includes(q)))return false;
+  return true;
+}
+
+function renderApp(){
+  const app=document.getElementById("app");
+  const filtered=PROJECTS.filter(matchProject);
+  const hsCount=PROJECTS.filter(p=>p.level==="High School").length;
+  const aiCount=PROJECTS.filter(p=>p.category==="ai").length;
+  const iotCount=PROJECTS.filter(p=>p.category==="iot").length;
+
+  let html=`
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-name">Tech Project Intelligence</div>
+      <div class="brand-sub">Athena Education &mdash; ${filtered.length} of ${PROJECTS.length} projects</div>
+    </div>
+    <div class="controls">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6.5" cy="6.5" r="4.5"/><path d="m10 10 3 3"/></svg>
+        <input type="text" placeholder="Search projects..." id="qInput" value="${state.q.replace(/"/g,'&quot;')}" oninput="updateQ(this.value)">
+      </div>
+      <select onchange="updateLevel(this.value)">${LEVELS.map(l=>`<option${state.level===l?" selected":""}>${l}</option>`).join("")}</select>
+      <select onchange="updateSource(this.value)" style="max-width:170px">${SOURCES.map(s=>`<option${state.source===s?" selected":""}>${s}</option>`).join("")}</select>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat"><div class="stat-num">${PROJECTS.length}</div><div class="stat-label">Total projects</div></div>
+    <div class="stat"><div class="stat-num">${hsCount}</div><div class="stat-label">High school</div></div>
+    <div class="stat"><div class="stat-num">${aiCount+iotCount}</div><div class="stat-label">AI &amp; IoT</div></div>
+    <div class="stat"><div class="stat-num">${PROJECTS.filter(p=>p.award).length}</div><div class="stat-label">Award-winning</div></div>
+  </div>
+
+  <div class="tabs">
+    ${CATS.map(c=>`<div class="tab${state.cat===c.key?" active":""}" onclick="updateCat('${c.key}')">${c.label}</div>`).join("")}
+  </div>
+
+  <div class="snap-row">
+    <div class="snap${state.source==="All sources"&&state.level==="All levels"&&state.cat==="all"&&state.q===""?" active":""}" onclick="quickFilter('all')">All</div>
+    <div class="snap" onclick="quickFilter('hs25')">ISEF 2025</div>
+    <div class="snap" onclick="quickFilter('mit')">MIT Labs</div>
+    <div class="snap" onclick="quickFilter('athena')">Athena Projects</div>
+    <div class="snap" onclick="quickFilter('uni')">University Level</div>
+  </div>
+  `;
+
+  if(filtered.length===0){
+    html+=`<div class="empty">No projects match — try adjusting the filters or search term.</div>`;
+  }else{
+    html+=`<div class="grid">`;
+    for(const p of filtered){
+      const desc=p.desc.length>115?p.desc.slice(0,115)+"…":p.desc;
+      html+=`<div class="card" onclick="openModal(${p.id})">
+        <div class="card-top"><div class="card-title">${p.title}</div><span class="${badgeClass(p.category)}">${p.category}</span></div>
+        <div class="card-desc">${desc}</div>
+        ${p.award?`<div class="card-award">&#11042; ${p.award}</div>`:""}
+        <div class="card-meta"><div class="card-source">${p.institution} &middot; ${p.year}</div><div class="card-level">${levelLabel(p.level)}</div></div>
+      </div>`;
+    }
+    html+=`</div>`;
+  }
+
+  app.innerHTML=html;
+
+  if(state.modal){
+    const p=PROJECTS.find(x=>x.id===state.modal);
+    if(p){
+      const ov=document.createElement("div");
+      ov.className="overlay";
+      ov.id="overlay";
+      ov.onclick=function(e){if(e.target===ov)closeModal()};
+      ov.innerHTML=`<div class="modal">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <div class="modal-badge"><span class="${badgeClass(p.category)}">${p.category.toUpperCase()}</span></div>
+        <div class="modal-title">${p.title}</div>
+        ${p.award?`<div class="modal-award">&#11042; ${p.award}</div>`:""}
+        <div class="modal-meta">${p.institution} &middot; ${p.source} &middot; ${p.year}</div>
+        <div class="modal-section"><h4>Overview</h4><p>${p.desc}</p></div>
+        <div class="modal-section"><h4>Domain &amp; level</h4><p>${p.domain} &nbsp;&middot;&nbsp; ${p.level}</p></div>
+        <div class="modal-section"><h4>Key components</h4><div class="tag-row">${p.components.map(c=>`<span class="tag">${c}</span>`).join("")}</div></div>
+        <div class="modal-section"><h4>Impact</h4><p>${p.impact}</p></div>
+        ${p.reference?`<a class="source-link" href="${p.reference}" target="_blank" rel="noopener">View source &#8599;</a>`:""}
+      </div>`;
+      document.body.appendChild(ov);
+    }
+  }
+}
+
+function updateCat(c){state.cat=c;cleanup();renderApp()}
+function updateLevel(v){state.level=v;cleanup();renderApp()}
+function updateSource(v){state.source=v;cleanup();renderApp()}
+function updateQ(v){state.q=v;cleanup();renderApp()}
+function openModal(id){state.modal=id;renderApp()}
+function closeModal(){state.modal=null;cleanup();renderApp()}
+function cleanup(){const o=document.getElementById("overlay");if(o)o.remove()}
+function quickFilter(t){
+  cleanup();
+  if(t==="all"){state.source="All sources";state.level="All levels";state.cat="all";state.q=""}
+  else if(t==="hs25"){state.source="Regeneron ISEF 2025";state.level="High School";state.cat="all";state.q=""}
+  else if(t==="mit"){state.source="MIT Lab / Media Lab";state.level="All levels";state.cat="all";state.q=""}
+  else if(t==="athena"){state.source="Athena Scholar";state.level="All levels";state.cat="all";state.q=""}
+  else if(t==="uni"){state.source="All sources";state.level="University";state.cat="all";state.q=""}
+  renderApp();
+}
+
+renderApp();
+</script>
+</body>
+</html>
